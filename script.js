@@ -2,44 +2,43 @@ function computerPlay()
 {
 	let random = Math.random();
 	if (random < 0.33)
-		return "Rock";
+		return "rock";
 	else if (random < 0.64)
-		return "Paper";
+		return "paper";
 	else
-		return "Scissors";
+		return "scissors";
 }
 
 function playRound(playerSelection, computerSelection)
 {
 	playerSelection = playerSelection.toLowerCase();
-	computerSelection = computerSelection.toLowerCase();
 	if (playerSelection === "rock")
 	{
 		if (computerSelection === "scissors")
 			return 1;
 		else if (computerSelection === "paper")
-			return 0;
-		else
 			return -1;
+		else
+			return 0;
 	}
 	else if (playerSelection === "paper")
-    {
-        if (computerSelection === "scissors")
-			return 0;
-        else if (computerSelection === "rock")
-			return 1;
-        else
+        {
+		if (computerSelection === "scissors")
 			return -1;
-    }
+       		else if (computerSelection === "rock")
+			return 1;
+        	else
+			return 0;
+    	}
 	else
-    {
-        if (computerSelection === "rock")
-			return 0;
-        else if (computerSelection === "paper")
-			return 1;
-        else
+    	{	
+        	if (computerSelection === "rock")
 			return -1;
-    }
+        	else if (computerSelection === "paper")
+			return 1;
+        	else
+			return 0;
+    	}
 }
 
 function capitalize(str)
@@ -47,38 +46,82 @@ function capitalize(str)
 	return str[0].toUpperCase() + str.substring(1).toLowerCase();
 }
 
-function game()
+const newGame = document.querySelector('#newGame');
+const points = document.querySelector('#points');
+const result = document.querySelector('#result');
+let i = 0, j = 0;
+const pointsDisplayPlayer = document.createElement('div');
+const pointsDisplayComputer = document.createElement('div');
+
+pointsDisplayComputer.classList.add('pointsDisplay', 'pointsDisplayComputer');
+pointsDisplayPlayer.classList.add('pointsDisplay', 'pointsDisplayPlayer');
+pointsDisplayPlayer.textContent = `Player: ${i}`;
+pointsDisplayComputer.textContent = `Computer: ${j}`;
+points.appendChild(pointsDisplayPlayer);
+points.appendChild(pointsDisplayComputer);
+
+function removeTransition(e)
 {
-	let player = 0, computer = 0, i = 0;
-	while(player != 5 && computer != 5)
-	{
-		console.log(`Round ${++i}!`);
-		let playerSelection = prompt("What shall you play?");
-		console.log(`You played ${capitalize(playerSelection)}.`);
-		let computerSelection = computerPlay();
-		console.log(`The computer played ${capitalize(computerSelection)}.`);
-		if (playRound(playerSelection, computerSelection) === 1)
-		{
-			console.log(`You win! ${capitalize(playerSelection)} beats ${capitalize(computerSelection)}.`);
-			player++;
-		}
-		else if (playRound(playerSelection, computerSelection) === 0)
-		{
-            console.log(`You lose! ${capitalize(computerSelection)} beats ${capitalize(playerSelection)}.`);
-			computer++;
-		}
-		else
-		{
-			console.log("Draw!");
-		}
-		console.log(`Player: ${player} points.\nComputer: ${computer} points.`);
-	}
-	if (player > computer)
-		console.log(`You won by ${player - computer} points!`);
-	else if (player < computer)
-		console.log(`You lost by ${computer - player} points!`);
-	else
-		console.log("It's a draw!");
+	if (e.propertyName !== 'transform') return;
+	e.target.classList.remove('clicked');
 }
 
-game();
+function clickedNewGame(e)
+{
+	buttons.forEach(button => button.disabled = false);
+	i = j = 0;
+	pointsDisplayPlayer.textContent = `Player: ${i}`;
+	pointsDisplayComputer.textContent = `Computer: ${j}`;
+	result.innerHTML = '';
+	newGame.innerHTML = '';
+}
+
+function play(e)
+{
+	let playerSelection = e.target.id, computerSelection = computerPlay();
+	let winner = playRound(playerSelection, computerSelection);
+	const para = document.createElement('p');
+	para.classList.add('resultDisplay');
+	if (result.firstChild)
+		result.removeChild(result.firstChild);
+	if (winner === 1)
+	{
+		para.textContent = `You won! Computer played ${computerSelection}.`;
+		pointsDisplayPlayer.textContent = `Player: ${++i}`;
+		pointsDisplayComputer.textContent = `Computer: ${j}`;
+	}	
+	else if (winner === -1)
+	{
+		para.textContent = `You lost! Computer played ${computerSelection}.`;
+		pointsDisplayPlayer.textContent = `Player: ${i}`;
+		pointsDisplayComputer.textContent = `Computer: ${++j}`;
+	}
+	else
+		para.textContent = 'Draw!';
+	result.appendChild(para);
+	if (i === 5 || j === 5)
+	{
+		const winner = document.createElement('p');
+		winner.id = 'winner';
+		winner.textContent = `${i === 5 ? 'You won!!!' : 'The computer won!!!'}`
+		result.appendChild(winner);
+		buttons.forEach(button => button.disabled = true);
+		const newGameBtn = document.createElement('button');
+		newGameBtn.id = 'newGameBtn';
+		newGameBtn.textContent = 'New game';
+		newGame.appendChild(newGameBtn);
+		newGame.addEventListener('click', clickedNewGame);
+	}
+	
+}
+
+function select(e)
+{
+	const btn = document.querySelector(`#${e.target.id}`);
+	btn.classList.add('clicked');
+	play(e);
+}
+
+const buttons = document.querySelectorAll('button');
+buttons.forEach(button => button.addEventListener('transitionend', removeTransition));
+buttons.forEach(button => button.addEventListener('click', select));

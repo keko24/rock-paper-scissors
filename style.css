@@ -1,0 +1,79 @@
+* {
+	font-family: 'Comics', 'Comic Sans', cursive, sans-serif;
+	font-size: 18px;
+}
+
+body {
+	background-color: black;
+	color: white;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+}
+
+#rock-paper-scissors
+{
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+}
+
+img {
+	width: 200px;
+	height: 200px;
+}
+
+button {
+	padding: 0;
+	border: 4px solid white;
+	transition: all .2s ease;
+}
+
+img, button {
+	border-radius: 16px;
+}
+
+.clicked {
+	transform: scale(1.05);
+	border-color: #f2f2f2;
+	box-shadow: 0 0 1rem #f2f2f2;
+}
+
+#points {
+	display: flex;
+	margin-top: 50px;
+	margin-bottom: 75px;
+}
+
+.pointsDisplayPlayer {
+	margin-right: 400px;
+}
+
+.pointsDisplay {
+	font-size: 48px;
+}
+
+#result {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.resultDisplay {
+	margin-bottom: 0;
+}
+
+.resultDisplay, #winner {
+	font-size: 36px;
+}
+
+#newGameBtn {
+	padding: 10px;
+	font-size: 24px;
+}
+
+.pointsDisplayComputer, .pointsDisplayPlayer {
+	width: 300px;
+}
